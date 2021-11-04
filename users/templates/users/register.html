@@ -1,0 +1,24 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %} <!--now we can simply access the form variable that we passed in throw the context to this template-->
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4s">JOIN TODAY</legend> <!--this will give our form a little bit more detail-->
+                <!--Now lets just print out the form-->
+                <!--{{ form.as_p }} .as_p -> that will render our form as paragraph tag-->
+                {{ form|crispy }}
+            </fieldset>
+            <div class="from-group">
+                <button class="btn btn-outline-info" type="submit">Sign Up</button>
+            </div>
+        </form>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                Already have an account ? <a class="ml-2" href="{% url 'login' %}">Sign in Now !</a>
+            </small> <!--ml-2 -> margin left 2-->
+        </div>
+    </div>
+{% endblock content %}

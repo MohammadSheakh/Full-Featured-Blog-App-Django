@@ -1,0 +1,63 @@
+{% extends "blog/base.html" %}
+<h1>Blog Home ! </h1>
+{% block content %}
+
+{% for post in postsKey %}
+<article class="media content-section">
+    <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}"
+         alt="A problem arise in blog/templates/blog/home.html">
+    <div class="media-body">
+        <div class="article-metadata">
+            <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
+            <!--username e click korle tar shob post dekhabe-->
+            <small class="text-muted">{{ post.date_posted }}</small>
+        </div>
+        <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+        <!-- url e amra ekta parameter pathailam.. sheta hocche post er ID .. sheta primary key hishebe pass hobe -->
+        <p class="article-content">{{ post.content }}</p>
+    </div>
+</article>
+<!--        <h1>{{ post.title }}</h1>-->
+<!--        <p>By {{ post.author }} on {{ post.date_posted }}</p>-->
+<!--        <p>{{ post.content }}</p>-->
+{% endfor %}
+
+<!---------------------------------------------------------------------------------------------------->
+<div class="row">
+    <div class="col-4"></div>  <!--eita responsive korte hobe ..-->
+    <div class="col-8">
+
+        {% if is_paginated %}
+        {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">First</a> <!--Very first page -->
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        <!--Previous kichu thakle shetar kaj shesh korlam-->
+        {% endif %}
+
+        <!--amra jodi 5 no. page e thaki .. taile she 5 no. page er ager kichu page dekhabe ar shesh er kichu page dekhabe-->
+        {% for num in page_obj.paginator.page_range %} <!--this is a code block-->
+        <!--shob gula page er moddhe loop chalacchi-->
+        <!--we only want to print out the current page and a few pages surrounding the current page -->
+        {% if page_obj.number == num %} <!--to see if we are on the current page -->
+        <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a> <!--Solid button-->
+        <!--now we just want to print out a few pages that surround this current page.. and to do this we can use a couple of django template filters-->
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <!--elif the num that we were on that we are on through the-->
+        <!--condition ta met korle amra ekhane ekta filter use korbo -->
+        <!-- jei page e achi .. shetar previous 3 page ar next 3 page show korbe ... -->
+        <!-- num < page_obj.number => current number that we are on through the loop is less than the current page number then add three-->
+        <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a> <!--Next Page  -->
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        <!--Next kichu thakle shetar kaj shesh korlam-->
+        {% endif %}
+
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}
+
